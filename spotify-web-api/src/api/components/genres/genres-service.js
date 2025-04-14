@@ -1,4 +1,4 @@
-const usersRepository = require('./users-repository');
+const usersRepository = require('./genres-repository');
 
 async function getUsers() {
   return usersRepository.getUsers();

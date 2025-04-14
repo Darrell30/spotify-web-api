@@ -1,4 +1,4 @@
-const usersService = require('./users-service');
+const usersService = require('./genres-service');
 const { errorResponder, errorTypes } = require('../../../core/errors');
 const { hashPassword } = require('../../../utils/password');
 

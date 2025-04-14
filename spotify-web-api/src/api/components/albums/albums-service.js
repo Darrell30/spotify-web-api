@@ -1,14 +1,19 @@
-const booksRepository = require('./books-repository');
+const albumsRepository = require('./albums-repository');
 
-async function getBooks() {
-  return booksRepository.getBooks();
+async function getAlbumById(id) {
+  return albumsRepository.getAlbumById(id);
 }
 
-async function create(title) {
-  return booksRepository.create(title);
+async function getMultipleAlbums(idsArray) {
+  return albumsRepository.getMultipleAlbums(idsArray);
+}
+
+async function getAlbumTracks(id) {
+  return albumsRepository.getAlbumTracks(id);
 }
 
 module.exports = {
-  getBooks,
-  create,
+  getAlbumById,
+  getMultipleAlbums,
+  getAlbumTracks,
 };

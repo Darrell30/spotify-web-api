@@ -1,29 +1,22 @@
 const express = require('express');
+const route = express.Router();
 
 const albumsController = require('./albums-controller');
 
-const route = express.Router();
+
 
 module.exports = (app) => {
   app.use('/albums', route);
 
-  route.get('/', (request, response) => {
-    let {offset,limit} = req.query;
-  
-    offset = parseInt(offset) || 0;
-    limit = parseInt(limit) || 10;
-    });
+  // Get multiple albums by IDs (comma-separated string)
+  // Example: GET /albums?ids=3KuXEGcqLcnEYWnn3OEGy0,6akEvsycLGftJxYudPjmqK
+  route.get('/', albumsController.getMultipleAlbums);
 
-  // Get list of books
-  route.get('/', albumsController.getAlbums);
+  // Get a single album by ID
+  // Example: GET /albums/3KuXEGcqLcnEYWnn3OEGy0
+  route.get('/:id', albumsController.getAlbumById);
 
-  /* Create a new book
-  route.post('/', albumsController.createBook);
-  */
-
-  // TODO: Get a book by id
-
-  // TODO: Update a book by id
-
-  // TODO: Delete a book by id
+  // Get tracks from a specific album
+  // Example: GET /albums/3KuXEGcqLcnEYWnn3OEGy0/tracks
+  route.get('/:id/tracks', albumsController.getAlbumTracks);
 };

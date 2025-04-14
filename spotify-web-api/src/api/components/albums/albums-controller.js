@@ -1,33 +1,56 @@
-const booksService = require('./books-service');
+const albumsService = require('./albums-service');
 const { errorResponder, errorTypes } = require('../../../core/errors');
 
-async function getBooks(request, response, next) {
+async function getAlbumById(request, response, next) {
   try {
-    const books = await booksService.getBooks();
+    const { id } = request.params;
 
-    return response.status(200).json(books);
+    if (!id) {
+      throw errorResponder(errorTypes.VALIDATION_ERROR, 'Album ID is required');
+    }
+
+    const album = await albumsService.getAlbumById(id);
+
+    return response.status(200).json(album);
   } catch (error) {
     return next(error);
   }
 }
 
-async function createBook(request, response, next) {
+async function getMultipleAlbums(request, response, next) {
   try {
-    const { title } = request.body;
+    const { ids } = request.query;
 
-    if (!title) {
-      throw errorResponder(errorTypes.VALIDATION_ERROR, 'Title is required');
+    if (!ids) {
+      throw errorResponder(errorTypes.VALIDATION_ERROR, 'Album IDs are required (comma-separated)');
     }
 
-    const book = await booksService.create(title);
+    const albums = await albumsService.getMultipleAlbums(ids.split(','));
 
-    return response.status(200).json(book);
+    return response.status(200).json(albums);
+  } catch (error) {
+    return next(error);
+  }
+}
+
+async function getAlbumTracks(request, response, next) {
+  try {
+    const { id } = request.params;
+
+    if (!id) {
+      throw errorResponder(errorTypes.VALIDATION_ERROR, 'Album ID is required');
+    }
+
+    const tracks = await albumsService.getAlbumTracks(id);
+
+    return response.status(200).json(tracks);
   } catch (error) {
     return next(error);
   }
 }
 
 module.exports = {
-  getBooks,
-  createBook,
+  getAlbumById,
+  getMultipleAlbums,
+  getAlbumTracks,
 };

@@ -1,6 +1,6 @@
 const express = require('express');
 
-const usersController = require('./users-controller');
+const usersController = require('./genres-controller');
 
 const route = express.Router();
 
