@@ -1,13 +1,13 @@
 const express = require('express');
 
-const books = require('./components/books/books-route');
-const users = require('./components/users/users-route');
+const albums = require('./components/albums/albums-route');
+//const users = require('./components/genres/genres-route');
 
 module.exports = () => {
   const app = express.Router();
 
-  books(app);
-  users(app);
+  albums(app);
+  //users(app);
 
   return app;
 };

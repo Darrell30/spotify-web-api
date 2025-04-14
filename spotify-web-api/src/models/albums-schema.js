@@ -1,7 +1,12 @@
 module.exports = (db) =>
   db.model(
-    'Books',
+    'Albums',
     db.Schema({
-      title: String,
+      spotifyId: { type: String, required: true, unique: true },
+      _id : String,
+      name: String,
+      artists: String,
+      release_date: String,
+      total_tracks: Number,
     })
   );

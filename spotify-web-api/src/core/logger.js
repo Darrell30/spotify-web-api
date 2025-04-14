@@ -1,27 +1,27 @@
 const pino = require('pino');
 
-// Print the log to STDOUT with colors and formatting for easier read
+// Pretty-print configuration for development
 const pinoPretty = {
   target: 'pino-pretty',
   options: {
     colorize: true,
     crlf: true,
     translateTime: 'SYS:standard',
+    ignore: 'pid,hostname', // optional: makes logs cleaner
   },
 };
 
-module.exports = (appName) =>
+module.exports = (appName = 'app') =>
   pino(
     {
       name: appName,
       formatters: {
-        // Specify the level name instead of its integer value.
         level: (label) => ({
           level: label.toUpperCase(),
         }),
       },
       timestamp: pino.stdTimeFunctions.isoTime,
-      level: 'trace',
+      level: process.env.LOG_LEVEL || 'info',
       redact: {
         paths: ['password', '*.password', 'token', 'authorization'],
         censor: '[REDACTED]',
