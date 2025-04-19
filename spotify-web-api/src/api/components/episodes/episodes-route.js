@@ -6,15 +6,15 @@ const route = express.Router();
 module.exports = (app) => {
   app.use('/episodes', route);
 
-  // 🔎 Search episodes
+  // Search episodes
   route.get('/search', episodesController.searchEpisodes);
 
-  // 📥 Get user's saved episodes
+  // Get user's saved episodes
   route.get('/me', episodesController.getSavedEpisodes);
 
-  // 📦 Get several episodes by IDs (pakai query ?ids=)
+  // Get several episodes by IDs (pakai query ?ids=)
   route.get('/', episodesController.getSeveralEpisodes);
 
-  // 📄 Get one episode by ID
+  // Get one episode by ID
   route.get('/:id', episodesController.getEpisode);
 };
