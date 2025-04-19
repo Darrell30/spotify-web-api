@@ -8,12 +8,10 @@ const albumsController = require('./albums-controller');
 module.exports = (app) => {
   app.use('/albums', route);
 
-  // Get multiple albums by IDs (comma-separated string)
-  // Example: GET /albums?ids=3KuXEGcqLcnEYWnn3OEGy0,6akEvsycLGftJxYudPjmqK
-  route.get('/', albumsController.getMultipleAlbums);
+  // Get all albums
+  route.get('/', albumsController.getAllAlbums);
 
-  // Get a single album by ID
-  // Example: GET /albums/3KuXEGcqLcnEYWnn3OEGy0
+  // Get album by ID
   route.get('/:id', albumsController.getAlbumById);
 
   // Get tracks from a specific album

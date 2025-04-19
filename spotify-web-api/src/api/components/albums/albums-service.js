@@ -1,11 +1,11 @@
 const albumsRepository = require('./albums-repository');
 
-async function getAlbumById(id) {
-  return albumsRepository.getAlbumById(id);
+async function getAllAlbums() {
+  return await albumsRepository.getAllAlbums();
 }
 
-async function getMultipleAlbums(idsArray) {
-  return albumsRepository.getMultipleAlbums(idsArray);
+async function getAlbumById(id) {
+  return albumsRepository.getAlbumById(id);
 }
 
 async function getAlbumTracks(id) {
@@ -13,7 +13,7 @@ async function getAlbumTracks(id) {
 }
 
 module.exports = {
+  getAllAlbums,
   getAlbumById,
-  getMultipleAlbums,
   getAlbumTracks,
 };

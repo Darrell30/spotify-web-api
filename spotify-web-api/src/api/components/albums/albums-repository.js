@@ -1,27 +1,48 @@
-const Albums = require('../../../models/albums-schema');
+const AlbumModel = require('../../../models/albums-schema');
+const mongoose = require('mongoose');
 
-// Get an album by its ID
+async function getAllAlbums() {
+  const albums = await AlbumModel.find();
+  return albums;
+}
+
 async function getAlbumById(id) {
-  return Albums.findById(id);
+  const query = mongoose.Types.ObjectId.isValid(id)
+    ? { $or: [{ _id: id }, { album_id: id }] }
+    : { album_id: id };
+
+  const album = await AlbumModel.findOne(query).lean();
+
+  if (!album) throw new Error('Album not found');
+  return album;
 }
 
-// Get multiple albums by their IDs
-async function getMultipleAlbums(ids) {
-  return Albums.find({ _id: { $in: ids } });
-}
 
-// Get tracks for an album (assuming the `tracks` field is stored in the album schema)
 async function getAlbumTracks(id) {
-  const album = await Albums.findById(id);
-  if (album && album.tracks) {
-    return album.tracks;
-  } else {
+  const album = await AlbumModel.findOne({
+    $or: [{ _id: id }, { album_id: id }],
+  }).lean();
+
+  if (!album) {
+    throw new Error('Album not found');
+  }
+
+  if (!album.track_id || !album.track_name || album.track_id.length === 0) {
     throw new Error('Tracks not found for this album');
   }
+
+  // Combine track_id and track_name into one array of objects
+  const tracks = album.track_id.map((id, index) => ({
+    id,
+    name: album.track_name[index] || null,
+  }));
+
+  return tracks;
 }
 
+
 module.exports = {
+  getAllAlbums,
   getAlbumById,
-  getMultipleAlbums,
   getAlbumTracks,
 };
