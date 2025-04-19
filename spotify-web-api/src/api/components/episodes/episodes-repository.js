@@ -1,10 +1,10 @@
 const { Episodes } = require('../../../models');
 
 // Get all episodes from the database
-async function getEpisodes() {
+async function getEpisode() {
   return Episodes.find({});
 }
 
 module.exports = {
-  getEpisodes
+  getEpisode
 };

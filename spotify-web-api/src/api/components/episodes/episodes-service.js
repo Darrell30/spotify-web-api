@@ -1,9 +1,9 @@
 const episodesRepository = require('./episodes-repository');
 
-async function getEpisodes() {
-  return episodesRepository.getEpisodes();
+async function getEpisode() {
+  return episodesRepository.getEpisode();
 }
 
 module.exports = {
-  getEpisodes
+  getEpisode
 };
