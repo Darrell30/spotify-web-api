@@ -1,12 +1,10 @@
-module.exports = (db) =>
-  db.model(
-    'Albums',
-    db.Schema({
-      spotifyId: { type: String, required: true, unique: true },
-      _id : String,
-      name: String,
-      artists: String,
-      release_date: String,
-      total_tracks: Number,
-    })
-  );
+const mongoose = require('mongoose');
+
+const albumSchema = new mongoose.Schema({
+  album_id:   String,
+  album_name: String,
+  track_id : Array,
+  track_name : Array
+}, { collection: 'albums' });
+
+module.exports = mongoose.model('Album', albumSchema, 'albums');
