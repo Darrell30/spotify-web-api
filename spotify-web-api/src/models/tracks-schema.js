@@ -1,4 +1,3 @@
-// [File: models/tracks-schema.js]
 const mongoose = require('mongoose');
 
 const trackSchema = new mongoose.Schema({
