@@ -1,40 +1,14 @@
-const usersRepository = require('./genres-repository');
+const genresRepository = require('./genres-repository');
 
-async function getUsers() {
-  return usersRepository.getUsers();
+async function getAvailableGenres() {
+  return await genresRepository.getAvailableGenres();
 }
 
-async function getUser(id) {
-  return usersRepository.getUser(id);
-}
-
-async function emailExists(email) {
-  const user = await usersRepository.getUserByEmail(email);
-  return !!user; // Return true if user exists, false otherwise
-}
-
-async function createUser(email, password, fullName) {
-  return usersRepository.createUser(email, password, fullName);
-}
-
-async function updateUser(id, email, fullName) {
-  return usersRepository.updateUser(id, email, fullName);
-}
-
-async function deleteUser(id) {
-  return usersRepository.deleteUser(id);
-}
-
-async function loginUser(email, password) {
-  return usersRepository.loginUser(email, password);
+async function getGenreById(id) {
+  return await genresRepository.getGenreById(id);
 }
 
 module.exports = {
-  getUsers,
-  getUser,
-  emailExists,
-  createUser,
-  updateUser,
-  deleteUser,
-  loginUser,
+  getAvailableGenres,
+  getGenreById,
 };
