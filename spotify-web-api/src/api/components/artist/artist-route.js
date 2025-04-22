@@ -1,13 +1,18 @@
 const express = require('express');
-const router  = express.Router();
-
 const artistController = require('./artist-Controller');
 
+const route = express.Router();
 
-router.get('/', artistController.getAllArtists);
-router.get('/:id', artistController.getArtistById);
-router.post('/', artistController.createArtist);
-router.delete('/:id',artistController.deleteArtist);
-router.put('/:id', artistController.updateArtist);
+module.exports = (app) => {
+  app.use('/artist', route);
 
-module.exports = router;
+  route.get('/', artistController.getAllArtists);
+
+  route.get('/:id', artistController.getArtistById);
+
+  route.post('/', artistController.createArtist);
+
+  route.delete('/:id', artistController.deleteArtist);
+
+  route.put('/:id', artistController.updateArtist);
+};
