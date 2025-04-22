@@ -6,4 +6,3 @@ const AudiobookSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Audiobook', AudiobookSchema, 'audiobooks');
-
