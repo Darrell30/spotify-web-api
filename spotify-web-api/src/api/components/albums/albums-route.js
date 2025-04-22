@@ -3,8 +3,6 @@ const route = express.Router();
 
 const albumsController = require('./albums-controller');
 
-
-
 module.exports = (app) => {
   app.use('/albums', route);
 

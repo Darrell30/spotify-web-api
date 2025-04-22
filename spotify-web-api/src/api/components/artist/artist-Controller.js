@@ -1,4 +1,5 @@
 const artistService = require("./artist-service");
+const { errorResponder, errorTypes } = require('../../../core/errors');
 
 async function getAllArtists(req, res, next) {
   try {

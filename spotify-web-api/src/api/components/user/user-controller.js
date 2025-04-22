@@ -1,56 +1,88 @@
 const userService = require('./user-service');
 
-exports.createUser = async (req, res) => {
-  try {
-    const newUser = await userService.createUser(req.body);
-    res.status(201).json(newUser);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-};
-
-exports.getUserByUserId = async (req, res) => {
-  try {
-    const user = await userService.getUserByUserId(req.params.user_id);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    res.status(200).json(user);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-
-exports.getAllUsers = async (req, res) => {
+async function getAllUsers(req, res, next) {
   try {
     const users = await userService.getAllUsers();
-    res.status(200).json(users);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.json(users);
   }
-};
+  catch(err) {
+    next(err);
+  }
+}
 
-exports.getUserById = async (req, res) => {
+async function getUserById(request, response, next) {
   try {
-    const user = await userService.getUserById(req.params.id);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    res.status(200).json(user);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
+    const { id } = request.params;
 
-exports.updateUser = async (req, res) => {
-  try {
-    const updatedUser = await userService.updateUser(req.params.id, req.body);
-    if (!updatedUser) {
-      return res.status(404).json({ error: "User not found" });
+    if (!id) {
+      throw errorResponder(errorTypes.VALIDATION_ERROR, 'User ID is required');
     }
-    res.status(200).json(updatedUser);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+
+    const user = await userService.getUserById(id);
+
+    return response.status(200).json(user);
+  } catch (error) {
+    return next(error);
   }
+}
+
+async function createUser(request, response, next) {
+  try {
+    const userData = request.body;
+
+    if (!userData) {
+      throw errorResponder(errorTypes.VALIDATION_ERROR, 'User data is required');
+    }
+
+    const newUser = await userService.createUser(userData);
+
+    return response.status(201).json(newUser);
+  } catch (error) {
+    return next(error);
+  }
+}
+
+async function updateUser(request, response, next) {
+  try {
+    const { id } = request.params;
+    const userData = request.body;
+
+    if (!id) {
+      throw errorResponder(errorTypes.VALIDATION_ERROR, 'User ID is required');
+    }
+
+    if (!userData) {
+      throw errorResponder(errorTypes.VALIDATION_ERROR, 'User data is required');
+    }
+
+    const updatedUser = await userService.updateUser(id, userData);
+
+    return response.status(200).json(updatedUser);
+  } catch (error) {
+    return next(error);
+  }
+}
+
+async function deleteUser(request, response, next) {
+  try {
+    const { id } = request.params;
+
+    if (!id) {
+      throw errorResponder(errorTypes.VALIDATION_ERROR, 'User ID is required');
+    }
+
+    await userService.deleteUser(id);
+
+    return response.status(204).send();
+  } catch (error) {
+    return next(error);
+  }
+}
+
+module.exports = {
+  getAllUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser
 };

@@ -1,19 +1,10 @@
 const { Episodes } = require('../../../models/');
 
-async function getEpisode(id) {
-  return Episodes.findById(id);
-}
-
-async function getEpisodesByIds(ids) {
-  return Episodes.find({ _id: { $in: ids } });
-}
-
-async function getAllEpisodes() {
+// Get all episodes from the database
+async function getEpisode() {
   return Episodes.find({});
 }
 
 module.exports = {
-  getEpisode,
-  getEpisodesByIds,
-  getAllEpisodes,
+  getEpisode
 };

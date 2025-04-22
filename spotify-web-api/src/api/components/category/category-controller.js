@@ -1,4 +1,5 @@
 const categoryService = require('./category-service');
+const { errorResponder, errorTypes } = require('../../../core/errors');
 
 const getCategory = async (req, res, next) => {
   try {

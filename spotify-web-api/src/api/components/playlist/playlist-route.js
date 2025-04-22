@@ -1,24 +1,30 @@
 const express = require('express');
-const router = express.Router();
-const {
-  getAllPlaylists,
-  getPlaylistTracks,
-  addTrackToPlaylist,
-  deleteTrackFromPlaylist,
-  createPlaylist,
-  getPlaylistById,
-} = require('./playlist-controller');
+const route = express.Router();
 
-router.get('/playlist', getAllPlaylists);
+const playlistController = require('./playlist-controller');
 
-router.get('/:playlist_id', getPlaylistById);
+module.exports = (app) => {
+  // Use /api/playlists as the base path
+  app.use('/playlists', route);
 
-router.post('/playlist', createPlaylist);
+  // Get all playlists
+  route.get('/', playlistController.getAllPlaylists);
 
-router.get('/playlist/:playlist_id/tracks', getPlaylistTracks);
+  // Get playlist by ID
+  route.get('/:playlist_id', playlistController.getPlaylistById);
 
-router.post('/playlist/:playlist_id/tracks', addTrackToPlaylist);
+  // Create a new playlist
+  route.post('/', playlistController.createPlaylist);
 
-router.delete('/playlist/:playlist_id/tracks', deleteTrackFromPlaylist);
+  // Update playlist
+  route.put('/:playlist_id', playlistController.updatePlaylist)
 
-module.exports = router;
+  // Get tracks from a specific playlist
+  route.get('/:playlist_id/tracks', playlistController.getPlaylistTracks);
+
+  // Add track to playlist
+  route.post('/:playlist_id/tracks', playlistController.addTrackToPlaylist);
+
+  // Delete track from playlist
+  route.delete('/:playlist_id/tracks', playlistController.deleteTrackFromPlaylist);
+};

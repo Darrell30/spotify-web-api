@@ -1,94 +1,134 @@
-const Playlist = require('./playlist-schema');
-const {
-  getTracks,
-  addTrack,
-  deleteTrack
-} = require('./playlist-service');
+const playlistService = require('./playlist-service');
+const { errorResponder, errorTypes } = require('../../../core/errors');
 
-// GET playlist by playlist_id
-const mongoose = require("mongoose");
+async function getAllPlaylists(req, res, next) {
+  try {
+    const playlists = await playlistService.getAllPlaylists();
+    res.json(playlists);
+  } catch (err) {
+    next(err);
+  }
+}
 
-exports.getPlaylistById = async (req, res) => {
+async function getPlaylistById(req, res, next) {
   try {
     const { playlist_id } = req.params;
 
-    // Validasi ObjectId
-    if (!mongoose.Types.ObjectId.isValid(playlist_id)) {
-      return res.status(400).json({ message: "Invalid playlist ID" });
+    if (!playlist_id) {
+      throw errorResponder(errorTypes.VALIDATION_ERROR, 'Playlist ID is required');
     }
 
-    const playlist = await Playlist.findById(playlist_id);
+    const playlist = await playlistService.getPlaylistById(playlist_id);
+    return res.status(200).json(playlist);
+  } catch (error) {
+    return next(error);
+  }
+}
 
-    if (!playlist) {
-      return res.status(404).json({ message: "Playlist not found" });
+async function createPlaylist(req, res, next) {
+  try {
+    const playlistData = req.body;
+
+    if (!playlistData) {
+      throw errorResponder(errorTypes.VALIDATION_ERROR, 'Playlist data is required');
     }
 
-    res.status(200).json(playlist);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const newPlaylist = await playlistService.createPlaylist(playlistData);
+    return res.status(201).json(newPlaylist);
+  } catch (error) {
+    return next(error);
   }
-};
+}
 
-
-// GET semua playlist
-exports.getAllPlaylists = async (req, res) => {
+async function updatePlaylist(req, res, next) {
   try {
-    const playlists = await Playlist.find();
-    res.status(200).json(playlists);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
+    const { playlist_id } = req.params;
+    const playlistData = req.body;
 
-// POST playlist baru
-exports.createPlaylist = async (req, res) => {
-  const { display_name, playlist_id, playlist_name, tracks, user_id } = req.body;
-  try {
-    const newPlaylist = new Playlist({
-      display_name,
-      playlist_id,
-      playlist_name,
-      tracks: tracks || [],
-      user_id
-    });
-    await newPlaylist.save();
-    res.status(201).json(newPlaylist);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
+    if (!playlist_id) {
+      throw errorResponder(errorTypes.VALIDATION_ERROR, 'Playlist ID is required');
+    }
 
-// GET tracks dari satu playlist
-exports.getPlaylistTracks = async (req, res) => {
-  const { playlist_id } = req.params;
-  try {
-    const data = await getTracks(playlist_id);
-    res.status(200).json(data);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
+    if (!playlistData) {
+      throw errorResponder(errorTypes.VALIDATION_ERROR, 'Playlist data is required');
+    }
 
-// POST track ke playlist
-exports.addTrackToPlaylist = async (req, res) => {
-  const { playlist_id } = req.params;
-  const { uris } = req.body;
-  try {
-    const data = await addTrack(playlist_id, uris);
-    res.status(201).json(data);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const updatedPlaylist = await playlistService.updatePlaylist(playlist_id, playlistData);
+    return res.status(200).json(updatedPlaylist);
+  } catch (error) {
+    return next(error);
   }
-};
+}
 
-// DELETE track dari playlist
-exports.deleteTrackFromPlaylist = async (req, res) => {
-  const { playlist_id } = req.params;
-  const { tracks } = req.body;
+async function deletePlaylist(req, res, next) {
   try {
-    const data = await deleteTrack(playlist_id, tracks);
-    res.status(200).json(data);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const { playlist_id } = req.params;
+
+    if (!playlist_id) {
+      throw errorResponder(errorTypes.VALIDATION_ERROR, 'Playlist ID is required');
+    }
+
+    await playlistService.deletePlaylist(playlist_id);
+    return res.status(204).send();
+  } catch (error) {
+    return next(error);
   }
+}
+
+async function getPlaylistTracks(req, res, next) {
+  try {
+    const { playlist_id } = req.params;
+
+    if (!playlist_id) {
+      throw errorResponder(errorTypes.VALIDATION_ERROR, 'Playlist ID is required');
+    }
+
+    const tracks = await playlistService.getPlaylistTracks(playlist_id);
+    return res.status(200).json(tracks);
+  } catch (error) {
+    return next(error);
+  }
+}
+
+async function addTrackToPlaylist(req, res, next) {
+  try {
+    const { playlist_id } = req.params;
+    const { uris } = req.body;
+
+    if (!playlist_id) {
+      throw errorResponder(errorTypes.VALIDATION_ERROR, 'Playlist ID is required');
+    }
+
+    const result = await playlistService.addTrackToPlaylist(playlist_id, uris);
+    return res.status(201).json(result);
+  } catch (error) {
+    return next(error);
+  }
+}
+
+async function deleteTrackFromPlaylist(req, res, next) {
+  try {
+    const { playlist_id } = req.params;
+    const { tracks } = req.body;
+
+    if (!playlist_id) {
+      throw errorResponder(errorTypes.VALIDATION_ERROR, 'Playlist ID is required');
+    }
+
+    const result = await playlistService.deleteTrackFromPlaylist(playlist_id, tracks);
+    return res.status(200).json(result);
+  } catch (error) {
+    return next(error);
+  }
+}
+
+module.exports = {
+  getAllPlaylists,
+  getPlaylistById,
+  createPlaylist,
+  updatePlaylist,
+  deletePlaylist,
+  getPlaylistTracks,
+  addTrackToPlaylist,
+  deleteTrackFromPlaylist
 };
