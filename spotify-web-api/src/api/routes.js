@@ -8,6 +8,9 @@ const albumsRoute = require("./components/albums/albums-route")
 const episodesRoute = require("./components/episodes/episodes-route")
 const genresRoute = require("./components/genres/genres-route")
 const trackRoute = require("./components/tracks/tracks-route")
+const userRoute = require("./components/user/user-route")
+const playlistRoute = require ("./components/playlist/playlist-route")
+
 module.exports = () => {
     const app = express.Router();
 
@@ -19,6 +22,8 @@ module.exports = () => {
     episodesRoute(app);
     genresRoute(app);
     trackRoute(app);
+    userRoute(app);
+    playlistRoute(app);
 
 
     return app;
