@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const config = require('../core/config');
 const logger = require('../core/logger')('app');
 
-// Build full MongoDB 
+// Join the database connection string
 const connectionString = new URL(config.database.connection);
 connectionString.pathname += config.database.name;
 
@@ -19,7 +19,6 @@ db.once('open', () => {
 const dbExports = {};
 const basename = path.basename(__filename);
 
-// Baca semua file model (termasuk artist-schema.js)
 fs.readdirSync(__dirname)
   .filter(
     (file) =>
