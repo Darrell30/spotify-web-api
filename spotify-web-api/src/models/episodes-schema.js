@@ -1,5 +1,5 @@
 module.exports = (db) => {
-    // Definisikan schema dengan field yang diperlukan
+
     const episodeSchema = new db.Schema({
       title: { type: String, required: true },
       description: { type: String },
@@ -14,8 +14,6 @@ module.exports = (db) => {
       external_urls: { type: db.Schema.Types.Mixed },
       uri: { type: String },
     });
-  
-    // Cek apakah model "Episodes" sudah ada,
-    // kalau sudah ada, gunakan model yang sudah ada
+
     return db.models.Episodes || db.model('Episodes', episodeSchema);
   };
